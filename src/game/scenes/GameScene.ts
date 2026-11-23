@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import * as Phaser from "phaser";
 import { EventBus, pendingChannelData, setPendingChannelData } from "../EventBus";
 import type { Socket } from "socket.io-client";
 import { MapObject, MapData, OBJECT_TYPES, OBJECT_TYPE_LIST, computeOccupiedTiles, detectAndConvertMapData, generateObjectId, canPlaceObject, getObjectDimensions } from "@/lib/object-types";

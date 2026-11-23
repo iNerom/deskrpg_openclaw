@@ -203,6 +203,8 @@ const REQUIRED_KEYS = [
 ] as const;
 
 const TEST_CODES: Record<ErrorCode, string> = {
+  registration_disabled: "errors.registrationDisabled",
+  gateway_pairing_required: "errors.gatewayPairingRequired",
   invalid_credentials: "errors.invalidCredentials",
   login_id_password_required: "errors.loginIdPasswordRequired",
   login_id_nickname_password_required: "errors.loginIdNicknamePasswordRequired",

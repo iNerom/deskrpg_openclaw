@@ -13,7 +13,8 @@ const runtimePaths = require("./runtime-paths.js");
 
 const PROTOCOL_MIN = 1;
 const PROTOCOL_MAX = 3;
-const MODERN_PROTOCOL = 3;
+const MODERN_PROTOCOL_MIN = 3;
+const MODERN_PROTOCOL_MAX = 4;
 const MODERN_CLIENT_ID = "cli";
 const MODERN_CLIENT_MODE = "cli";
 const MODERN_ROLE = "operator";
@@ -483,8 +484,8 @@ class OpenClawGateway {
       method: "connect",
       params: modernDevice
         ? {
-          minProtocol: MODERN_PROTOCOL,
-          maxProtocol: MODERN_PROTOCOL,
+          minProtocol: MODERN_PROTOCOL_MIN,
+          maxProtocol: MODERN_PROTOCOL_MAX,
           client: {
             id: MODERN_CLIENT_ID,
             version: "1.0.0",

@@ -157,8 +157,10 @@ export async function DELETE(
   }
 
   try {
-    await internalRpc(id, "agents.delete", { agentId, deleteFiles: true });
-    return NextResponse.json({ success: true });
+    return NextResponse.json(
+      { errorCode: "agent_deletion_disabled", error: "OpenClaw agent deletion is disabled in DeskRPG" },
+      { status: 403 },
+    );
   } catch (err) {
     console.error("Failed to remove agent:", err);
     return NextResponse.json(

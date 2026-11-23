@@ -14,6 +14,7 @@ test("MeetingBroker strips SPEAK prefix from streamed and final response text", 
         { agentId: "dev-b", displayName: "으뉴", role: "Participant" },
       ],
       gateway: {
+        async chatAbort() {},
         async chatSend(
           _agentId: string,
           _sessionKey: string,

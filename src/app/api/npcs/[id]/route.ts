@@ -265,17 +265,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
     const { npc } = result;
 
-    // If NPC has an agent, remove it from the gateway via RPC
-    const openclawConfig = parseDbObject(npc.openclawConfig);
-    const agentId = openclawConfig?.agentId as string | null;
-
-    if (agentId) {
-      try {
-        await internalRpc(npc.channelId, "agents.delete", { agentId, deleteFiles: true });
-      } catch (err) {
-        console.warn(`Failed to remove agent ${agentId} from gateway (proceeding with NPC deletion):`, err);
-      }
-    }
+    // NPC removal must not delete the linked OpenClaw agent.
 
     await db.delete(npcs).where(eq(npcs.id, id));
     return NextResponse.json({ success: true });

@@ -8,6 +8,9 @@ import {
 } from "./npc-response-messages";
 
 const TEST_CODES: Record<NpcResponseMessageCode, string> = {
+  unsupported_file_type: "npc.unsupportedFileType",
+  file_too_large: "npc.fileTooLarge",
+  too_many_files: "npc.tooManyFiles",
   no_agent: "npc.noAgent",
   gateway_not_connected: "npc.gatewayNotConnected",
   gateway_error: "npc.gatewayError",
@@ -27,7 +30,6 @@ test("resolveNpcResponseChunk localizes system message codes", () => {
     {
       chunk: "",
       messageCode: "gateway_error",
-      done: true,
     },
     (key, params) => {
       calls.push({ key, params });
@@ -43,7 +45,6 @@ test("resolveNpcResponseChunk preserves streamed text when no system message cod
   const result = resolveNpcResponseChunk(
     {
       chunk: "hello",
-      done: false,
     },
     () => "should-not-be-used",
   );

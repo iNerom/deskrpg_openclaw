@@ -12,7 +12,10 @@ type MeetingMinutesRecord = {
   keyTopics?: unknown;
 };
 
-export function normalizeMeetingMinutesRecord<T extends MeetingMinutesRecord>(record: T) {
+export function normalizeMeetingMinutesRecord<T extends MeetingMinutesRecord>(record: T): Omit<T, "participants" | "keyTopics"> & {
+  participants: MeetingParticipant[];
+  keyTopics: string[];
+} {
   return {
     ...record,
     participants: parseDbArray<MeetingParticipant>(record.participants),

@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import * as Phaser from "phaser";
 import { generateObjectTextures } from "@/lib/object-textures";
 
 // 16 office tiles, each 32x32, laid out in a single row (512x32)

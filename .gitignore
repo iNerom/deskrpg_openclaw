@@ -70,3 +70,9 @@ tests/
 *.test.tsx
 deploy/
 deploy/pre-deploy-checklist.md
+
+# Local recovery and troubleshooting files
+.next-before-reset-*/
+backups/
+*.backup-*
+deskrpg-launch*.log

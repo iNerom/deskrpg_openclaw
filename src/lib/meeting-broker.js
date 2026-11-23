@@ -22,7 +22,7 @@ class MeetingBroker {
    * @param {object} config
    * @param {string} config.topic
    * @param {Array<{agentId: string, displayName: string, role: string}>} config.participants
-   * @param {import('./openclaw-gateway.js').OpenClawGateway} config.gateway
+   * @param {Pick<import('./openclaw-gateway.js').OpenClawGateway, 'chatSend' | 'chatAbort'>} config.gateway
    * @param {string} config.sessionKeyPrefix
    * @param {string} config.meetingId
    * @param {object} [config.quota]

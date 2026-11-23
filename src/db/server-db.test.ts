@@ -116,7 +116,7 @@ test("server-db sqlite exports RBAC schema and backfills a legacy sqlite deploym
 
   ensureSqliteCompatibility(sqlite);
 
-  const tableNames = sqlite.prepare("SELECT name FROM sqlite_master WHERE type = 'table'").all() as Array<{ name: string }>;
+  const tableNames = sqlite.prepare<[], { name: string }>("SELECT name FROM sqlite_master WHERE type = 'table'").all() as Array<{ name: string }>;
   const defaultGroup = sqlite.prepare(
     "SELECT id, slug, is_default FROM groups WHERE slug = 'default'",
   ).get() as { id: string; slug: string; is_default: number };
@@ -176,7 +176,7 @@ test("server-db sqlite bootstraps base tables for a fresh empty database", () =>
 
   const sqlite = new Database(sqlitePath);
   const tableNames = sqlite
-    .prepare("SELECT name FROM sqlite_master WHERE type = 'table'")
+    .prepare<[], { name: string }>("SELECT name FROM sqlite_master WHERE type = 'table'")
     .all()
     .map((row: { name: string }) => row.name);
 

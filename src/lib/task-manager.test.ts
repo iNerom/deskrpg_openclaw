@@ -13,17 +13,17 @@ const { TaskManager } = require("./task-manager.js") as {
     db: ReturnType<typeof drizzle>,
     schema: { tasks: typeof tasks; npcs: typeof npcs },
   ) => {
-    handleTaskAction: (...args: unknown[]) => Promise<Record<string, unknown> | null>;
-    getTaskById: (taskId: string, channelId: string) => Promise<Record<string, unknown> | null>;
-    moveTask: (taskId: string, channelId: string, toStatus: string, npcId: string | null, options?: { expectedFromStatus?: string }) => Promise<Record<string, unknown> | null>;
-    createBacklogTask: (channelId: string, assignerId: string, title: string, summary: string | null) => Promise<Record<string, unknown>>;
+    handleTaskAction: (...args: unknown[]) => Promise<(Record<string, unknown> & { id: string }) | null>;
+    getTaskById: (taskId: string, channelId: string) => Promise<(Record<string, unknown> & { id: string }) | null>;
+    moveTask: (taskId: string, channelId: string, toStatus: string, npcId: string | null, options?: { expectedFromStatus?: string }) => Promise<(Record<string, unknown> & { id: string }) | null>;
+    createBacklogTask: (channelId: string, assignerId: string, title: string, summary: string | null) => Promise<(Record<string, unknown> & { id: string })>;
     hasInProgressTask: (npcId: string, channelId: string) => Promise<boolean>;
-    getNextPendingTask: (npcId: string, channelId: string) => Promise<Record<string, unknown> | null>;
-    markTaskNudged: (taskId: string, channelId: string) => Promise<Record<string, unknown> | null>;
-    markTaskStalled: (taskId: string, channelId: string, reason?: string) => Promise<Record<string, unknown> | null>;
-    resumeTask: (taskId: string, channelId: string) => Promise<Record<string, unknown> | null>;
-    getTaskByNpcTaskId: (npcId: string, npcTaskId: string) => Promise<Record<string, unknown> | null>;
-    getStaleInProgressTasks: (channelId: string, olderThanIso: string) => Promise<Record<string, unknown>[]>;
+    getNextPendingTask: (npcId: string, channelId: string) => Promise<(Record<string, unknown> & { id: string }) | null>;
+    markTaskNudged: (taskId: string, channelId: string) => Promise<(Record<string, unknown> & { id: string }) | null>;
+    markTaskStalled: (taskId: string, channelId: string, reason?: string) => Promise<(Record<string, unknown> & { id: string }) | null>;
+    resumeTask: (taskId: string, channelId: string) => Promise<(Record<string, unknown> & { id: string }) | null>;
+    getTaskByNpcTaskId: (npcId: string, npcTaskId: string) => Promise<(Record<string, unknown> & { id: string }) | null>;
+    getStaleInProgressTasks: (channelId: string, olderThanIso: string) => Promise<(Record<string, unknown> & { id: string })[]>;
   };
 };
 
@@ -230,6 +230,7 @@ test("moveTask: backlog → pending with npcId", async () => {
   const { mgr } = createTaskTestDb();
   const task = await mgr.createBacklogTask("channel-1", "character-1", "Test task", null);
   const moved = await mgr.moveTask(task.id, "channel-1", "pending", "npc-1");
+  assert.ok(moved);
   assert.equal(moved.status, "pending");
   assert.equal(moved.npcId, "npc-1");
 });
@@ -239,6 +240,7 @@ test("moveTask: pending → backlog clears npcId", async () => {
   const task = await mgr.createBacklogTask("channel-1", "character-1", "Test task", null);
   await mgr.moveTask(task.id, "channel-1", "pending", "npc-1");
   const moved = await mgr.moveTask(task.id, "channel-1", "backlog", null);
+  assert.ok(moved);
   assert.equal(moved.status, "backlog");
   assert.equal(moved.npcId, null);
 });
@@ -248,6 +250,7 @@ test("moveTask: pending → in_progress keeps existing npcId", async () => {
   const task = await mgr.createBacklogTask("channel-1", "character-1", "Test task", null);
   await mgr.moveTask(task.id, "channel-1", "pending", "npc-1");
   const moved = await mgr.moveTask(task.id, "channel-1", "in_progress", null);
+  assert.ok(moved);
   assert.equal(moved.status, "in_progress");
   assert.equal(moved.npcId, "npc-1");
 });
@@ -257,6 +260,7 @@ test("moveTask: any → complete sets completedAt", async () => {
   const task = await mgr.createBacklogTask("channel-1", "character-1", "Test task", null);
   await mgr.moveTask(task.id, "channel-1", "pending", "npc-1");
   const moved = await mgr.moveTask(task.id, "channel-1", "complete", null);
+  assert.ok(moved);
   assert.equal(moved.status, "complete");
   assert.ok(moved.completedAt);
 });
@@ -265,6 +269,7 @@ test("moveTask: any → cancelled without npcId", async () => {
   const { mgr } = createTaskTestDb();
   const task = await mgr.createBacklogTask("channel-1", "character-1", "Test task", null);
   const moved = await mgr.moveTask(task.id, "channel-1", "cancelled", null);
+  assert.ok(moved);
   assert.equal(moved.status, "cancelled");
   assert.equal(moved.npcId, null);
 });

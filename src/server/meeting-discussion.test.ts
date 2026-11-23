@@ -43,7 +43,7 @@ function createFakeIo(calls: RecordedCall[]) {
 
 test("registerMeetingDiscussionHandlers starts a broker and emits mode change", async () => {
   const calls: RecordedCall[] = [];
-  const activeBrokers = new Map<string, { isRunning: () => boolean }>();
+  const activeBrokers = new Map<string, ReturnType<NonNullable<Parameters<typeof registerMeetingDiscussionHandlers>[0]["deps"]["createMeetingBroker"]>>>();
   const discussionInitiators = new Map<string, string>();
   const meetingRooms = new Map([
     [
@@ -82,7 +82,7 @@ test("registerMeetingDiscussionHandlers starts a broker and emits mode change", 
       canControlMeeting: async () => true,
       createMeetingBroker: () => ({
         config: {
-          participants: [{ agentId: "agent-1", displayName: "Analyst" }],
+          participants: [{ agentId: "agent-1", displayName: "Analyst", role: "Participant", passPolicy: null }],
           sessionKeyPrefix: "sess-1",
           meetingId: "meet-1",
         },

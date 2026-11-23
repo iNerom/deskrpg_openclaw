@@ -35,7 +35,7 @@ async function findAvailablePort(
     const available = await new Promise<boolean>((resolve) => {
       const srv = net.createServer();
       srv.once("error", () => resolve(false));
-      srv.listen(p, () => {
+      srv.listen(p, hostname, () => {
         srv.close(() => resolve(true));
       });
     });
@@ -46,7 +46,7 @@ async function findAvailablePort(
   );
 }
 
-const app = next({ dev: true, hostname, port: preferredPort });
+const app = next({ dev: true, hostname, port: preferredPort, webpack: true });
 const handle = app.getRequestHandler();
 
 app.prepare().then(async () => {
@@ -74,7 +74,7 @@ app.prepare().then(async () => {
       return gateway.agentsFileGet(params.agentId, params.name);
     if (method === "agents.list") return gateway.agentsList();
     if (method === "agents.delete")
-      return gateway.agentsDelete(params.agentId, params.deleteFiles);
+      throw new Error("OpenClaw agent deletion is disabled in DeskRPG");
     throw new Error(`Unknown RPC method: ${method}`);
   });
 
@@ -107,7 +107,7 @@ app.prepare().then(async () => {
 
   setupSocketHandlers(io);
 
-  httpServer.listen(port, () => {
+  httpServer.listen(port, hostname, () => {
     console.log(`> Dev server ready on http://${hostname}:${port}`);
   });
 });

@@ -1,4 +1,7 @@
-import { MEETING_NPC_STREAM_EVENT } from "./meeting-socket";
+import { createRequire } from "node:module";
+import { MEETING_NPC_STREAM_EVENT } from "./meeting-socket.ts";
+
+const require = createRequire(import.meta.url);
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { MeetingBroker } = require("../lib/meeting-broker.js") as {
